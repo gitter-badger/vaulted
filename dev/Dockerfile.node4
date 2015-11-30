@@ -1,0 +1,13 @@
+FROM node:4
+
+# add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
+RUN groupadd -g 500 -r nodejs \
+    && groupadd appy \
+    && useradd -m -g appy -G nodejs appy \
+    && chown -R appy:nodejs /usr/local/bin \
+    && chown -R appy:nodejs /usr/local/lib/node_modules \
+    && mkdir -p /app \
+    && chown -R appy /app
+
+WORKDIR /app
+USER appy

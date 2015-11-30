@@ -1,0 +1,6 @@
+docs:
+  image: nginx:1.9.5
+  ports:
+   - "8080:80"
+  volumes:
+   - ./vaulted/coverage/lcov-report:/usr/share/nginx/html/cover:ro

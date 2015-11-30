@@ -1,0 +1,5 @@
+alias fig="docker-compose"
+alias fign="docker-compose --x-networking"
+alias drma='docker rm $(docker ps -a -q)'
+alias drmia='docker rmi $(docker images -q --filter "dangling=true")'
+
