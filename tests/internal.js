@@ -240,7 +240,9 @@ describe('internal state', function () {
   });
 
   it('recover - no root token', function () {
-    var data = JSON.stringify({"keys": []});
+    var data = JSON.stringify({
+      "keys": []
+    });
     fs.writeFileSync(BACKUP_FILE, data);
     return internal.recover(myVault).then(function () {
       expect(myVault.token).to.be.null;
@@ -249,7 +251,10 @@ describe('internal state', function () {
   });
 
   it('recover - keys not Array', function () {
-    var data = JSON.stringify({"root": "xyz", "keys": "abc,xyz"});
+    var data = JSON.stringify({
+      "root": "xyz",
+      "keys": "abc,xyz"
+    });
     fs.writeFileSync(BACKUP_FILE, data);
     return internal.recover(myVault).then(function () {
       expect(myVault.token).to.be.null;
@@ -258,7 +263,10 @@ describe('internal state', function () {
   });
 
   it('recover - keys empty Array', function () {
-    var data = JSON.stringify({"root": "xyz", "keys": []});
+    var data = JSON.stringify({
+      "root": "xyz",
+      "keys": []
+    });
     fs.writeFileSync(BACKUP_FILE, data);
     return internal.recover(myVault).then(function () {
       expect(myVault.token).to.be.null;
@@ -276,9 +284,9 @@ describe('internal state', function () {
   });
 
   after(function () {
-    // need to fix the fact that passing in 'consul' would result in
-    // an error when removing the item from the mounts list.
-    return myVault.deleteMount({id: 'consul/'}).then(function () {
+    return myVault.deleteMount({
+      id: 'consul'
+    }).then(function () {
       if (!myVault.status.sealed) {
         return myVault.seal().then(function () {
           debuglog('vault sealed: %s', myVault.status.sealed);
