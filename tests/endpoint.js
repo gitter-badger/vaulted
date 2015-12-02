@@ -1,12 +1,15 @@
 require('./helpers.js').should;
 
 var
+  debuglog = require('util').debuglog('vaulted-tests'),
   chai = require('./helpers').chai,
   _ = require('lodash'),
   fs = require('fs'),
   Endpoint = require('../lib/endpoint.js')();
 
 chai.use(require('./helpers').cap);
+var VAULT_HOST = process.env.HOME === '/home/appy' ? 'vault' : '127.0.0.1';
+
 
 describe('Endpoint', function() {
 
@@ -84,7 +87,7 @@ describe('Endpoint', function() {
     var endpoint, options;
 
     beforeEach(function() {
-      options = _.extend(api_def[0], { base_url: 'https://localhost:8200' });
+      options = _.extend(api_def[0], { base_url: 'http://' + VAULT_HOST + ':8200' });
       endpoint = new Endpoint(options);
     });
 
@@ -109,19 +112,21 @@ describe('Endpoint', function() {
     });
 
     it('should reject the promise if the endpoint does not support the verb', function() {
-      endpoint = new Endpoint(_.extend(api_def[2], { base_url: 'https://localhost:8200' }));
-      endpoint.get().should.be.rejectedWith(Error);
+      endpoint = new Endpoint(_.extend(api_def[2], { base_url: 'http://' + VAULT_HOST + ':8200' }));
+      endpoint.get().should.be.rejectedWith(/Could not find method/);
     });
 
     it('should return a promise if the endpoint supports the verb', function() {
-      endpoint = new Endpoint(api_def[0]);
-      endpoint.get().should.be.fufilled;
+      debuglog('server_url: ', endpoint.server_url);
+      // promise is returned but it is rejected since the route does not actually
+      // exist within the vault server.
+      endpoint.get().should.be.rejectedWith(/404 page not found/);
     });
 
     it('should reject promise if endpoint requires id and one is not provided', function () {
-      options = _.extend(api_def[3], { base_url: 'https://localhost:8200' });
+      options = _.extend(api_def[3], { base_url: 'http://' + VAULT_HOST + ':8200' });
       endpoint = new Endpoint(options);
-      endpoint.put().should.be.rejectedWith(Error);
+      endpoint.put().should.be.rejectedWith(/requires an id, none was given/);
     });
 
   });

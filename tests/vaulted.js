@@ -1,9 +1,12 @@
 require('./helpers.js').should;
 
-var _ = require('lodash'),
+var
+  helpers = require('./helpers'),
+  _ = require('lodash'),
   Vault = require('../lib/vaulted.js');
 
-var VAULT_HOST = process.env.HOME === '/home/appy' ? 'vault' : '127.0.0.1';
+var VAULT_HOST = helpers.VAULT_HOST;
+var VAULT_PORT = helpers.VAULT_PORT;
 
 
 describe('Vaulted', function() {
@@ -69,7 +72,7 @@ describe('Vaulted', function() {
     before(function () {
       myVault = new Vault({
         vault_host: VAULT_HOST,
-        vault_port: 8200,
+        vault_port: VAULT_PORT,
         vault_ssl: 0
       });
     });
