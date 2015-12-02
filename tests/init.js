@@ -1,13 +1,17 @@
 require('./helpers.js').should;
 
 var
+  helpers = require('./helpers'),
   debuglog = require('util').debuglog('vaulted-tests'),
-  chai = require('./helpers').chai,
-  assert = require('./helpers').assert,
+  chai = helpers.chai,
+  assert = helpers.assert,
   Vault = require('../lib/vaulted.js');
 
-chai.use(require('./helpers').cap);
-var VAULT_HOST = process.env.HOME === '/home/appy' ? 'vault' : '127.0.0.1';
+chai.use(helpers.cap);
+
+var CONSUL_HOST = helpers.CONSUL_HOST + ':' + helpers.CONSUL_PORT;
+var VAULT_HOST = helpers.VAULT_HOST;
+var VAULT_PORT = helpers.VAULT_PORT;
 
 describe('init', function() {
   var myVault = null;
@@ -55,3 +59,4 @@ describe('init', function() {
   });
 
 });
+

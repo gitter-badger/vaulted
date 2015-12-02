@@ -1,20 +1,22 @@
 require('./helpers.js').should;
 
 var
+  helpers = require('./helpers'),
   debuglog = require('util').debuglog('vaulted-tests'),
   fs = require('fs'),
   os = require('os'),
   path = require('path'),
-  _ = require('lodash'),
-  chai = require('./helpers').chai,
-  assert = require('./helpers').assert,
-  expect = require('./helpers').expect,
+  chai = helpers.chai,
+  assert = helpers.assert,
+  expect = helpers.expect,
   Vault = require('../lib/vaulted'),
   internal = require('../lib/internal');
 
-chai.use(require('./helpers').cap);
+chai.use(helpers.cap);
 
-var VAULT_HOST = process.env.HOME === '/home/appy' ? 'vault' : '127.0.0.1';
+var CONSUL_HOST = helpers.CONSUL_HOST + ':' + helpers.CONSUL_PORT;
+var VAULT_HOST = helpers.VAULT_HOST;
+var VAULT_PORT = helpers.VAULT_PORT;
 var BACKUP_DIR = path.join(os.homedir(), '.vault');
 var BACKUP_FILE = path.join(BACKUP_DIR, 'keys.json');
 
@@ -301,3 +303,4 @@ describe('internal state', function () {
     });
   });
 });
+

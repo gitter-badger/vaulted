@@ -1,43 +1,45 @@
 require('./helpers.js').should;
 
 var
+  helpers = require('./helpers'),
   debuglog = require('util').debuglog('vaulted-tests'),
-  chai = require('./helpers').chai,
-  assert = require('./helpers').assert,
+  chai = helpers.chai,
+  assert = helpers.assert,
   Vault = require('../lib/vaulted');
 
-chai.use(require('./helpers').cap);
+var CONSUL_HOST = helpers.CONSUL_HOST + ':' + helpers.CONSUL_PORT;
+var VAULT_HOST = helpers.VAULT_HOST;
+var VAULT_PORT = helpers.VAULT_PORT;
 
-// if running within container the HOME is fixed; else running locally so assume
-// that consul and vault are also running locally.
-var CONSUL_HOST = '127.0.0.1:8500';
-var VAULT_HOST = process.env.HOME === '/home/appy' ? 'vault' : '127.0.0.1';
-
+chai.use(helpers.cap);
 
 describe('consul', function () {
   var myVault = null;
 
   before(function () {
+
     myVault = new Vault({
       // debug: 1,
       vault_host: VAULT_HOST,
-      vault_port: 8200,
+      vault_port: VAULT_PORT,
       vault_ssl: 0
     });
-    return myVault.prepare().then(function () {
-      return myVault.init().then(function () {
-        return myVault.unSeal().then(function () {
-          return myVault.createMount({
-            id: 'consul',
-            body: {
-              type: 'consul'
-            }
-          });
-        });
+
+    myVault.prepare()
+    .then(myVault.init)
+    .then(myVault.unSeal)
+    .then(function createMount() {
+      return myVault.createMount({
+        id: 'consul',
+        body: {
+          type: 'consul'
+        }
       });
-    }).then(null, function (err) {
+    })
+    .catch(function onError(err) {
       debuglog('(before) vault setup of consul backend failed: %s', err.message);
     });
+
   });
 
   describe('#configConsulAccess', function () {
@@ -397,3 +399,4 @@ describe('consul', function () {
   });
 
 });
+

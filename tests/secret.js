@@ -1,18 +1,18 @@
 require('./helpers.js').should;
 
 var
+  helpers = require('./helpers'),
   debuglog = require('util').debuglog('vaulted-tests'),
-  chai = require('./helpers').chai,
-  assert = require('./helpers').assert,
-  expect = require('./helpers').expect,
+  chai = helpers.chai,
+  assert = helpers.assert,
+  expect = helpers.expect,
   Vault = require('../lib/vaulted');
 
-chai.use(require('./helpers').cap);
+var CONSUL_HOST = helpers.CONSUL_HOST + ':' + helpers.CONSUL_PORT;
+var VAULT_HOST = helpers.VAULT_HOST;
+var VAULT_PORT = helpers.VAULT_PORT;
 
-// if running within container the HOME is fixed; else running locally so assume
-// that consul and vault are also running locally.
-var VAULT_HOST = process.env.HOME === '/home/appy' ? 'vault' : '127.0.0.1';
-
+chai.use(helpers.cap);
 
 describe('secret', function () {
   var myVault;
@@ -21,7 +21,7 @@ describe('secret', function () {
     myVault = new Vault({
       // debug: 1,
       vault_host: VAULT_HOST,
-      vault_port: 8200,
+      vault_port: VAULT_PORT,
       vault_ssl: 0
     });
 
@@ -218,3 +218,4 @@ describe('secret', function () {
   });
 
 });
+
