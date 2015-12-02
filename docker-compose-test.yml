@@ -1,0 +1,18 @@
+consul:
+  image: gliderlabs/consul:0.5
+  ports:
+    - "8500:8500"
+    - "8400:8400"
+    - "8600:53/udp"
+  command: "agent -data-dir=/tmp/consul -server -bootstrap"
+  hostname: node1
+
+vault:
+  image: chiefy/alpine-vault:0.3.1
+  volumes:
+    - "./config/dev.hcl:/etc/vault.hcl"
+  ports:
+    - "8200:8200"
+
+
+
